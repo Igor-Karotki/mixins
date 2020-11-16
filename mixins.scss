@@ -1,0 +1,290 @@
+:root {
+  --clr-lightBlack: #222222;
+  --clr-magenta: #e3116f;
+}
+$colors: (
+  lightBlack: var(--clr-lightBlack),
+  magenta: var(--clr-magenta),
+);
+@function color($color-name) {
+  @return map-get($colors, $color-name);
+}
+
+//background-color: color(lightBlack);
+
+//////mixins
+
+@mixin countdown(
+  $class,
+  $font-size: 14px,
+  $font-weight: 600,
+  $line-height: 20px,
+  $color: color(magenta),
+  $padding: false
+) {
+  .countdown#{$class} {
+    font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+    @if $font-size {
+      font-size: $font-size;
+    }
+    @if $font-weight {
+      font-weight: $font-weight;
+    }
+    @if $line-height {
+      line-height: $line-height;
+    }
+    @if $color {
+      color: $color;
+    }
+    @if $padding {
+      line-height: $padding;
+    }
+  }
+}
+// @include countdown("Wrapper :global .txt", $font-size: 24px, $color: color(magenta));
+
+////absolutePosition
+
+@mixin absolutePosition($top-value, $right-value) {
+  position: absolute;
+  top: $top-value;
+  right: $right-value;
+}
+
+// .countdownWrapper {
+//   @include absolutePosition(100px, 200px);
+// }
+
+////Automatic centering
+
+@mixin center-auto {
+  margin: {
+    left: auto;
+    right: auto;
+  }
+}
+
+// .countdownWrapper{
+//   @include center-auto()
+// }
+
+////emptyPseudo
+
+@mixin emptyPseudo($display: block, $pos: absolute, $content: "") {
+  content: $content;
+  display: $display;
+  position: $pos;
+}
+
+// div::after {
+//   @include emptyPseudo;
+//   top: -1rem; 
+//   right: -1rem;
+//   width: 1rem; 
+//   height: 1rem;
+// }
+
+////media mixin #1
+
+$mobile: 481px;
+
+@mixin mobile {
+  @media (max-width: #{$mobile}) {
+    @content;
+  }
+}
+// a{
+//   .....
+//   @include mobile {
+//     .............
+//    }
+// }
+
+////media mixin #2
+
+$breakpoints: (
+  exlg: 1201,
+  lg: 961,
+  md: 781,
+  sm: 641,
+  mini: 481,
+) !default;
+$media-direction: max !default;
+
+@mixin css_property($property, $value) {
+  @if type_of($value) == string {
+    #{$property}: unquote($value);
+  } @else {
+    #{$property}: $value;
+  }
+}
+
+@function splitScreens($string, $seperator) {
+  $string: inspect(quote($string));
+  $sepId: str-index(quote($string), $seperator);
+  @if ($sepId) {
+    $array: (
+      quote(str-slice($string, 0, $sepId - 1)),
+      quote(str-slice($string, $sepId + 1))
+    );
+    @return $array;
+  } @else {
+    @return $string;
+  }
+}
+@mixin media($properties, $orientation: false) {
+  @each $property, $value in $properties {
+    @if type_of($value) == "map" {
+      @each $screen, $val in $value {
+        $screen: splitScreens($screen, "-");
+        @if type_of($screen) == "list" {
+          $min_screen: nth($screen, 1);
+          $max_screen: nth($screen, 2);
+          @if $min_screen == min or $min_screen == max {
+            $media-direction: $min_screen;
+            @if $orientation {
+              @if map-has-key($breakpoints, $max_screen) {
+                @media only screen and (#{$media-direction}-width: map-get($breakpoints, $max_screen) + 'px') and (orientation: $orientation) {
+                  @include css_property($property, $val);
+                }
+              } @else {
+                @media only screen and (#{$media-direction}-width: $max_screen + 'px')  and (orientation: $orientation) {
+                  @include css_property($property, $val);
+                }
+              }
+            } @else {
+              @if map-has-key($breakpoints, $max_screen) {
+                @media only screen and (#{$media-direction}-width: map-get($breakpoints, $max_screen) + 'px') {
+                  @include css_property($property, $val);
+                }
+              } @else {
+                @media only screen and (#{$media-direction}-width: $max_screen + 'px') {
+                  @include css_property($property, $val);
+                }
+              }
+            }
+          } @else {
+            @if $orientation {
+              @if map-has-key($breakpoints, $min_screen) and
+                map-has-key($breakpoints, $max_screen)
+              {
+                @media only screen and (min-width: map-get($breakpoints, $min_screen) + "px") and (max-width: map-get($breakpoints, $max_screen) + "px") and (orientation: $orientation) {
+                  @include css_property($property, $val);
+                }
+              } @else if
+                map-has-key($breakpoints, $min_screen) and not
+                map-has-key($breakpoints, $max_screen)
+              {
+                @media only screen and (min-width: map-get($breakpoints, $min_screen) + "px") and (max-width: $max_screen + "px") and (orientation: $orientation) {
+                  @include css_property($property, $val);
+                }
+              } @else if not
+                map-has-key($breakpoints, $min_screen) and
+                map-has-key($breakpoints, $max_screen)
+              {
+                @media only screen and (min-width: $min_screen + "px") and (max-width: map-get($breakpoints, $max_screen) + "px") and (orientation: $orientation) {
+                  @include css_property($property, $val);
+                }
+              } @else {
+                @media only screen and (min-width: $min_screen + "px") and (max-width: $max_screen + "px") and (orientation: $orientation) {
+                  @include css_property($property, $val);
+                }
+              }
+            } @else {
+              @if map-has-key($breakpoints, $min_screen) and
+                map-has-key($breakpoints, $max_screen)
+              {
+                @media only screen and (min-width: map-get($breakpoints, $min_screen) + "px") and (max-width: map-get($breakpoints, $max_screen) + "px") {
+                  @include css_property($property, $val);
+                }
+              } @else if
+                map-has-key($breakpoints, $min_screen) and not
+                map-has-key($breakpoints, $max_screen)
+              {
+                @media only screen and (min-width: map-get($breakpoints, $min_screen) + "px") and (max-width: $max_screen + "px") {
+                  @include css_property($property, $val);
+                }
+              } @else if not
+                map-has-key($breakpoints, $min_screen) and
+                map-has-key($breakpoints, $max_screen)
+              {
+                @media only screen and (min-width: $min_screen + "px") and (max-width: map-get($breakpoints, $max_screen) + "px") {
+                  @include css_property($property, $val);
+                }
+              } @else {
+                @media only screen and (min-width: $min_screen + "px") and (max-width: $max_screen + "px") {
+                  @include css_property($property, $val);
+                }
+              }
+            }
+          }
+        } @else {
+          @if $screen == "print" {
+            @media print {
+              @include css_property($property, $val);
+            }
+          } @else {
+            @if $orientation {
+              @if map-has-key($breakpoints, $screen) {
+                @media only screen and (#{$media-direction}-width: map-get($breakpoints, $screen) + 'px') and (orientation: $orientation) {
+                  @include css_property($property, $val);
+                }
+              } @else {
+                @if $screen == all {
+                  @media only screen and (orientation: $orientation) {
+                    @include css_property($property, $val);
+                  }
+                } @else {
+                  @media only screen and (#{$media-direction}-width: $screen + 'px') and (orientation: $orientation) {
+                    @include css_property($property, $val);
+                  }
+                }
+              }
+            } @else {
+              @if map-has-key($breakpoints, $screen) {
+                @media only screen and (#{$media-direction}-width: map-get($breakpoints, $screen) + 'px') {
+                  @include css_property($property, $val);
+                }
+              } @else {
+                @if $screen == all {
+                  @include css_property($property, $val);
+                } @else {
+                  @media only screen and (#{$media-direction}-width: $screen + 'px') {
+                    @include css_property($property, $val);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    } @else {
+      @if $property == "extend" {
+        @extend #{unquote($value)} !optional;
+      } @else {
+        @include css_property($property, $value);
+      }
+    }
+  }
+}
+
+// .transition{
+//   transition: all .3s;
+// };
+// body {
+//   @include media((
+//       margin: '11px 0',
+//       width: 90%,
+//       height: (all: 110px, 500-200: 100%, sm: 50%, 548: 10%, print: 10cm),
+//       // 500-200 = @media only screen and (max-width: 300px)
+//       // all: 110px = body {height: 110px}
+//       font-size: (sm: 12px),
+//       extend: '.transition',
+//       // it will take styles from .transition
+//       transform: (lg: rotate(45deg)),
+//       background: (
+//               lg: url('../images/pic.png') center center/cover no-repeat,
+//               sm-lg: url('../images/pic1.png') center center/cover no-repeat
+//       )
+//   ));
+// }
