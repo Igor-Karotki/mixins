@@ -8,10 +8,10 @@ a {
 
 //////mixins
 
-@include countdown(
-  "Wrapper :global .txt",
+@include countdownText(
+  /*countdown+*/ "Wrapper :global .txt",
   $font-size: 24px,
-  $color: color(magenta)
+  $color: null /*type null to erase default value*/
 );
 
 ////absolutePosition
@@ -38,23 +38,45 @@ div::after {
 
 ////media mixin #2
 
-.transition{
-  transition: all .3s;
-};
+.transition {
+  transition: all 0.3s;
+}
 body {
-  @include media((
-      margin: '11px 0',
+  @include media(
+    (
+      margin: "11px 0",
       width: 90%,
-      height: (all: 110px, 500-200: 100%, sm: 50%, 548: 10%, print: 10cm),
-      // 500-200 = @media only screen and (max-width: 300px)
-      // all: 110px = body {height: 110px}
-      font-size: (sm: 12px),
-      extend: '.transition',
-      // it will take styles from .transition
-      transform: (lg: rotate(45deg)),
+      height: (
+        all: 110px,
+        500-200: 100%,
+        sm: 50%,
+        548: 10%,
+        print: 10cm,
+      ),
+           // 500-200 = @media only screen and (max-width: 3
+           // all: 110px = body {height: 1
+      font-size:
+        (
+          sm: 12px,
+        ),
+      extend: ".transition",
+           // it will take styles from .trans
+      transform:
+        (
+          lg: rotate(45deg),
+        ),
       background: (
-              lg: url('../images/pic.png') center center/cover no-repeat,
-              sm-lg: url('../images/pic1.png') center center/cover no-repeat
-      )
-  ));
+        lg: url("../images/pic.png") center center/cover no-repeat,
+        sm-lg: url("../images/pic1.png") center center/cover no-repeat,
+      ),
+    )
+  );
+}
+
+.countdownWrapper {
+  @include size(1rem, 3rem);
+}
+
+.countdownWrapper {
+  @include placeholder-color();
 }

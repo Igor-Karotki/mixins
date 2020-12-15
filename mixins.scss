@@ -14,7 +14,7 @@ $colors: (
 
 //////mixins
 
-@mixin countdown(
+@mixin countdownText(
   $class,
   $font-size: 14px,
   $font-weight: 600,
@@ -22,7 +22,7 @@ $colors: (
   $color: color(magenta),
   $padding: false
 ) {
-  .countdown#{$class} {
+  .#{$class}countdown {
     font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
     @if $font-size {
       font-size: $font-size;
@@ -41,7 +41,43 @@ $colors: (
     }
   }
 }
-// @include countdown("Wrapper :global .txt", $font-size: 24px, $color: color(magenta));
+
+// @include countdownText(
+//   /*countdown+*/"Wrapper :global .txt",
+//   $font-size: 24px,
+//   $color: null /*type null to erase default value*/
+// );
+
+// you will get ->
+
+// .countdownWrapper :global .txt {
+//   font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+//   font-size: 24px;
+//   font-weight: 600;
+//   line-height: 20px;
+// }
+
+@mixin placeholder-color($color: var(--clr-magenta)) {
+  &::placeholder {
+    color: $color;
+  }
+  &::-webkit-input-placeholder {
+    color: $color;
+  }
+  &::-moz-placeholder {
+    color: $color;
+  }
+  &:-ms-input-placeholder {
+    color: $color;
+  }
+  &:-moz-placeholder {
+    color: $color;
+  }
+}
+
+// .countdownWrapper {
+//   @include placeholder-color(red);
+// }
 
 ////absolutePosition
 
@@ -68,6 +104,17 @@ $colors: (
 //   @include center-auto()
 // }
 
+////height and width size
+
+@mixin size($height: 100%, $width: 100%) {
+  height: $height;
+  width: $width;
+}
+
+// .countdownWrapper {
+//   @include size(1rem, 3rem);
+// }
+
 ////emptyPseudo
 
 @mixin emptyPseudo($display: block, $pos: absolute, $content: "") {
@@ -78,9 +125,9 @@ $colors: (
 
 // div::after {
 //   @include emptyPseudo;
-//   top: -1rem; 
+//   top: -1rem;
 //   right: -1rem;
-//   width: 1rem; 
+//   width: 1rem;
 //   height: 1rem;
 // }
 
@@ -287,4 +334,39 @@ $media-direction: max !default;
 //               sm-lg: url('../images/pic1.png') center center/cover no-repeat
 //       )
 //   ));
+// }
+
+//------------------------------------------------------
+
+// .countdown {
+//   display: table;
+//   align-self: center;
+//   &Col {
+//     display: table-row;
+//   }
+//   .Wrapper {
+//     display: flex;
+//     position: relative;
+//     align-content: center;
+//   }
+//   .countdownColElement,
+//   .countdownEndColElement {
+//     display: table-cell;
+//     vertical-align: middle;
+//   }
+//   &Text {
+//     font-size: 18px;
+//     line-height: 20px;
+//     font-weight: 600;
+//     padding: 0 5px 0 35px;
+//     span {
+//       color: var(--clr-lightBlack);
+//     }
+
+//     &.white {
+//       font-size: 12px;
+//       line-height: 1.2;
+//       font-weight: 600;
+//     }
+//   }
 // }

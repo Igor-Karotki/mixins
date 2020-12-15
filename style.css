@@ -7,12 +7,11 @@ a {
   background-color: var(--clr-magenta);
 }
 
-.countdownWrapper :global .txt {
+.Wrapper :global .txtcountdown {
   font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
   font-size: 24px;
   font-weight: 600;
   line-height: 20px;
-  color: var(--clr-magenta);
 }
 
 .countdownWrapper {
@@ -37,8 +36,8 @@ div::after {
 }
 
 .transition, body {
-  -webkit-transition: all .3s;
-  transition: all .3s;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
 }
 
 body {
@@ -94,5 +93,42 @@ body {
   body {
     background: url("../images/pic1.png") center center/cover no-repeat;
   }
+}
+
+.countdownWrapper {
+  height: 1rem;
+  width: 3rem;
+}
+
+.countdownWrapper::-webkit-input-placeholder {
+  color: var(--clr-magenta);
+}
+
+.countdownWrapper:-ms-input-placeholder {
+  color: var(--clr-magenta);
+}
+
+.countdownWrapper::-ms-input-placeholder {
+  color: var(--clr-magenta);
+}
+
+.countdownWrapper::placeholder {
+  color: var(--clr-magenta);
+}
+
+.countdownWrapper::-webkit-input-placeholder {
+  color: var(--clr-magenta);
+}
+
+.countdownWrapper::-moz-placeholder {
+  color: var(--clr-magenta);
+}
+
+.countdownWrapper:-ms-input-placeholder {
+  color: var(--clr-magenta);
+}
+
+.countdownWrapper:-moz-placeholder {
+  color: var(--clr-magenta);
 }
 /*# sourceMappingURL=style.css.map */
